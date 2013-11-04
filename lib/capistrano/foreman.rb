@@ -1,6 +1,6 @@
 Capistrano::Configuration.instance(:must_exist).load do |configuration|
 
-  _cset :foreman_sudo, "sudo"
+  _cset :foreman_sudo, sudo
   _cset :foreman_upstart_path, "/etc/init/sites"
   _cset :foreman_options, {}
   _cset :foreman_use_binstubs, false
@@ -25,7 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do |configuration|
 
     desc "Restart the application services"
     task :restart, roles: :app do
-      run "sudo service #{options[:app]} start || sudo service #{options[:app]}  restart"
+      run "#{foreman_sudo} service #{options[:app]} start || #{foreman_sudo} service #{options[:app]} restart"
     end
 
     def options
