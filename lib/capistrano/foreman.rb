@@ -1,16 +1,17 @@
 Capistrano::Configuration.instance(:must_exist).load do |configuration|
 
   _cset :foreman_sudo, sudo
+  _cset :foreman_export_format, "upstart"
   _cset :foreman_upstart_path, "/etc/init/sites"
   _cset :foreman_options, {}
   _cset :foreman_use_binstubs, false
 
   namespace :foreman do
-    desc "Export the Procfile to Ubuntu's upstart scripts"
+    desc "Export the Procfile to scripts"
     task :export, roles: :app do
       cmd = foreman_use_binstubs ? 'bin/foreman' : 'bundle exec foreman'
       run "if [ ! -d #{foreman_upstart_path} ]; then #{foreman_sudo} mkdir -p #{foreman_upstart_path}; fi"
-      run "cd #{release_path} && #{foreman_sudo} #{cmd} export upstart #{foreman_upstart_path} #{format(options)}"
+      run "cd #{release_path} && #{foreman_sudo} #{cmd} export #{foreman_export_format} #{foreman_upstart_path} #{format(options)}"
     end
 
     desc "Start the application services"
